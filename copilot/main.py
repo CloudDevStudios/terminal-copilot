@@ -61,11 +61,9 @@ def main():
     # TODO save history of previous user questions and answers
 
     keys = ["HOME", "USER", "SHELL"]
-    environs = ""
-    for key in keys:
-        if key in os.environ:
-            environs += f"{key}={os.environ[key]}\n"
-
+    environs = "".join(
+        f"{key}={os.environ[key]}\n" for key in keys if key in os.environ
+    )
     operating_system = platform.system()
     if is_unix_system():
         shell = os.environ.get("SHELL")
@@ -157,7 +155,7 @@ def show_command_options(prompt, cmd):
         pyperclip.copy(cmd)
     elif menu_entry_index == 2:
         link = get_explainshell_link(cmd)
-        print("> explainshell: " + link)
+        print(f"> explainshell: {link}")
         subprocess.run(["open", link])
     elif menu_entry_index == 3:
         show_more_cmd_options(prompt)
@@ -212,7 +210,7 @@ def request_cmds(prompt, n=1):
     return cmds
 
 def get_explainshell_link(cmd):
-    return "https://explainshell.com/explain?cmd=" + quote(cmd)
+    return f"https://explainshell.com/explain?cmd={quote(cmd)}"
 
 def strip_all_whitespaces_from(choices):
     return [choice.text.strip() for choice in choices]

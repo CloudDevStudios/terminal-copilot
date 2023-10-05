@@ -10,10 +10,7 @@ def _fish_history_file_location():
         os.path.join(os.environ["HOME"], ".local/share/fish/fish_history"),
         os.path.join(os.environ["HOME"], ".config/fish/fish_history"),
     ]
-    for path in possible_paths:
-        if os.path.exists(path):
-            return path
-    return None
+    return next((path for path in possible_paths if os.path.exists(path)), None)
 
 
 def fish_history_file_lines():
@@ -21,18 +18,14 @@ def fish_history_file_lines():
     if history_file is None:
         return []
     with open(history_file, "r") as history:
-        lines = history.readlines()
-        return lines
+        return history.readlines()
 
 
 def _zsh_history_file_location():
     possible_paths = [
         os.path.join(os.environ["HOME"], ".zsh_history"),
     ]
-    for path in possible_paths:
-        if os.path.exists(path):
-            return path
-    return None
+    return next((path for path in possible_paths if os.path.exists(path)), None)
 
 
 def zsh_history_file_lines():
@@ -40,8 +33,7 @@ def zsh_history_file_lines():
     if history_file is None:
         return []
     with open(history_file, 'rb') as history:
-        lines = history.read().decode(errors='replace').splitlines()
-        return lines
+        return history.read().decode(errors='replace').splitlines()
 
 
 def bash_history_file_lines():
@@ -49,30 +41,26 @@ def bash_history_file_lines():
     if history_file is None:
         return []
     with open(history_file, "r") as history:
-        lines = history.readlines()
-        return lines
+        return history.readlines()
 
 
 def _bash_history_file_location():
     possible_paths = [
         os.path.join(os.environ["HOME"], ".bash_history"),
     ]
-    for path in possible_paths:
-        if os.path.exists(path):
-            return path
-    return None
+    return next((path for path in possible_paths if os.path.exists(path)), None)
 
 
 def _get_fish_history_line(command_script):
-    return "- cmd: {}\n  when: {}\n".format(command_script, int(time()))
+    return f"- cmd: {command_script}\n  when: {int(time())}\n"
 
 
 def _get_zsh_history_line(command_script):
-    return "{}\n".format(command_script)
+    return f"{command_script}\n"
 
 
 def _get_bash_history_line(command_script):
-    return "{}\n".format(command_script)
+    return f"{command_script}\n"
 
 
 def save(cmd):
